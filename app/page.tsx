@@ -506,7 +506,7 @@ function DigitalDisplay({
       >
         <Typography
           sx={{
-            fontFamily: "var(--font-mono)",
+            fontFamily: "var(--font-geist-mono)",
             fontSize: "1.75rem",
             fontWeight: 700,
             color: PINK,

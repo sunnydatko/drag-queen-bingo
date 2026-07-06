@@ -1,7 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
-  colorSchemes: { light: true, dark: true },
+  colorSchemes: { dark: true },
   palette: {
     primary: {
       main: "#db2777",
@@ -9,6 +9,19 @@ const theme = createTheme({
   },
   shape: {
     borderRadius: 16,
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: { height: "100%" },
+        body: {
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        },
+      },
+    },
   },
 });
 
