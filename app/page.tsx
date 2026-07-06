@@ -57,7 +57,6 @@ export default function Home() {
   const [loadingComment, setLoadingComment] = useState(false);
   const [error, setError] = useState("");
   const [muted, setMuted] = useState(false);
-  const ballRef = useRef<HTMLDivElement>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const musicBufferRef = useRef<AudioBuffer | null>(null);
   const musicSourceRef = useRef<AudioBufferSourceNode | null>(null);
@@ -168,25 +167,42 @@ export default function Home() {
     void drawNumber(remaining);
   }
 
-  function fireConfetti() {
-    const rect = ballRef.current?.getBoundingClientRect();
-    const origin = rect
-      ? {
-          x: (rect.left + rect.width / 2) / window.innerWidth,
-          y: (rect.top + rect.height / 2) / window.innerHeight,
-        }
-      : { x: 0.5, y: 0.4 };
-
+  function fireBingoConfetti() {
+    const colors = [PINK, GOLD, "#ffffff"];
     confetti({
-      particleCount: 90,
-      spread: 70,
-      startVelocity: 32,
-      gravity: 0.9,
-      ticks: 200,
-      origin,
-      colors: [PINK, GOLD, "#ffffff"],
-      scalar: 0.9,
+      particleCount: 140,
+      spread: 100,
+      startVelocity: 45,
+      gravity: 0.8,
+      ticks: 300,
+      scalar: 1.2,
+      shapes: ["star"],
+      colors,
+      origin: { x: 0.5, y: 0.3 },
     });
+    confetti({
+      particleCount: 80,
+      spread: 60,
+      startVelocity: 35,
+      angle: 60,
+      colors,
+      origin: { x: 0.1, y: 0.6 },
+    });
+    confetti({
+      particleCount: 80,
+      spread: 60,
+      startVelocity: 35,
+      angle: 120,
+      colors,
+      origin: { x: 0.9, y: 0.6 },
+    });
+  }
+
+  function callBingo() {
+    fireBingoConfetti();
+    playChime();
+    setComment("🎉 BINGO! 🎉");
+    setError("");
   }
 
   async function drawNumber(pool: number[]) {
@@ -199,7 +215,6 @@ export default function Home() {
     setRemaining(pool.filter((_, i) => i !== idx));
     setCurrent({ letter, number });
     setCalled((prev) => [...prev, { letter, number }]);
-    fireConfetti();
     playChime();
     setError("");
     setLoadingComment(true);
@@ -386,7 +401,6 @@ export default function Home() {
           }}
         >
           <Box
-            ref={ballRef}
             sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1 }}
           >
             <Ball
@@ -402,6 +416,20 @@ export default function Home() {
             >
               CURRENT CALL
             </Typography>
+            <Button
+              onClick={callBingo}
+              disabled={!started}
+              variant="outlined"
+              size="small"
+              sx={{
+                color: GOLD,
+                borderColor: alpha(GOLD, 0.5),
+                "&:hover": { borderColor: GOLD, bgcolor: alpha(GOLD, 0.08) },
+                fontWeight: 700,
+              }}
+            >
+              🎉 Bingo!
+            </Button>
           </Box>
 
           <Box sx={{ flex: 1, minWidth: 0 }}>
